@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: Authentication API
+  version: 1.0.0
+  description: API for user authentication, including registration and login functionalities.
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /register:
+    post:
+      summary: User Registration
+      description: This endpoint is used for registering a new user. It requires a username, email, and password.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  description: Unique username for the user
+                  example: 'john_doe'
+                email:
+                  type: string
+                  format: email
+                  description: User's email address
+                  example: 'john_doe@example.com'
+                password:
+                  type: string
+                  format: password
+                  description: Strong user password
+                  example: 'your_password'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    description: Unique identifier of the registered user
+                    example: '123456789'
+                  message:
+                    type: string
+                    example: 'User registered successfully'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid request data'
+
+  /login:
+    post:
+      summary: User Login
+      description: This endpoint is used for logging in an existing user with email and password.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Registered email address of the user
+                  example: 'john_doe@example.com'
+                password:
+                  type: string
+                  format: password
+                  description: Password associated with the email
+                  example: 'your_password'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authenticated session
+                    example: 'jwt_token_here'
+        '401':
+          description: Unauthorized - Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid email or password'
+        '500':
+          description: Internal Server Error
